@@ -63,19 +63,21 @@ test_technique/
 
 ## 3. Choix techniques
 
-| Composant       | Technologie                    | Justification                                                           |
-| --------------- | ------------------------------ | ----------------------------------------------------------------------- |
-| API REST        | FastAPI                        | Deux endpoints simples, validation et documentation Swagger automatique |
-| PDF             | PyMuPDF                        | Extraction du texte natif, des liens et des images                      |
-| Word            | python-docx                    | Lecture des paragraphes, tableaux et éléments Word                      |
-| PowerPoint      | python-pptx                    | Lecture des textes et images des diapositives                           |
-| OCR             | Tesseract, pytesseract, Pillow | Récupération du texte présent dans les images ou pages scannées         |
-| Conversion      | LibreOffice (mode headless)    | Conversion DOCX/PPTX en PDF avant OCR complet si c'est nécessaire       |
-| Structuration   | Azure OpenAI (GPT-5)           | Extraction de champs à partir de mises en page hétérogènes              |
-| Schéma          | Pydantic                       | Types explicites et refus des champs supplémentaires                    |
-| Persistance     | SQLite                         | Stockage local léger, sans serveur de base de données                   |
-| Déploiement     | Docker                         | Environnement Python et dépendances système reproductibles              |
-| Qualité du code | Ruff                           | Vérification statique des règles de style et des imports                |
+### Choix techniques
+
+| Composant | Technologie | Justification |
+|---|---|---|
+| API | FastAPI | Création des endpoints et documentation Swagger |
+| PDF | PyMuPDF | Extraction du texte, des liens et des images |
+| Word | python-docx | Extraction du contenu des fichiers DOCX |
+| PowerPoint | python-pptx | Extraction du contenu des fichiers PPTX |
+| OCR | Tesseract, pytesseract, Pillow | Extraction du texte des images et documents scannés |
+| Conversion | LibreOffice | Conversion en PDF si nécessaire pour l'OCR |
+| LLM | Azure OpenAI (GPT-5) | Extraction des informations structurées des CV |
+| Validation | Pydantic | Vérification de la structure et des types du JSON |
+| Stockage | SQLite | Enregistrement des résultats sans serveur externe |
+| Déploiement | Docker | Facilite l'installation et l'exécution du projet |
+| Qualité du code | Ruff | Vérification du style du code (PEP 8) |
 
 L'approche **hybride extraction native + OCR** évite de traiter systématiquement toutes les pages en OCR. Le LLM intervient ensuite uniquement pour la structuration sémantique.
 
@@ -217,8 +219,11 @@ Vérification du code avec Ruff
 Ruff a été utilisé pour vérifier le respect des bonnes pratiques PEP 8.
 
 ruff format app/
+
 ruff check app/ --select E4,E7,E9,F,I,E501
+
 ruff format test/
+
 ruff check test/ --select E4,E7,E9,F,I,E501
 
 Résultat : All checks passed!
