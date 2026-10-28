@@ -1,0 +1,19 @@
+.env
+.env.*
+
+
+__pycache__/
+*.pyc
+.pytest_cache/
+
+.ipynb_checkpoints/
+
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+data/Banque de CVs/
+
+
+.ruff_cache
