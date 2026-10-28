@@ -195,13 +195,13 @@ Cet exemple illustre la **forme et les types**, et non un résultat extrait d'un
 
 ### Codes de réponse gérés
 
-| Code  | Cas                                                      |
-| ----- | -------------------------------------------------------- |
-| `200` | Traitement ou récupération réussi                        |
-| `400` | Extension de fichier non prise en charge                 |
-| `404` | Nom de fichier absent de la base (GET)                   |
-| `422` | CV invalide / erreur de validation de requête            |
-| `502` | Échec de l'appel au LLM ou absence de réponse structurée |
+| Code| Cas |
+|---|---|
+|`200`| Traitement ou récupération réussi|
+|`400`| Extension de fichier non prise en charge|
+|`404`| Nom de fichier absent de la base (GET)|
+|`422`| CV invalide / erreur de validation de requête|
+|`502`| Échec de l'appel au LLM ou absence de réponse structurée |
 
 ## 7. Tests et qualité du code
 
