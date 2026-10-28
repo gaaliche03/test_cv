@@ -79,15 +79,15 @@ test_technique/
 | Déploiement | Docker | Facilite l'installation et l'exécution du projet |
 | Qualité du code | Ruff | Vérification du style du code (PEP 8) |
 
-L'approche **hybride extraction native + OCR** évite de traiter systématiquement toutes les pages en OCR. Le LLM intervient ensuite uniquement pour la structuration sémantique.
+L'approche hybride (extraction native + OCR) permet d'utiliser l'OCR uniquement lorsque c'est nécessaire. Le LLM analyse ensuite le texte extrait pour identifier et organiser les informations du CV dans un JSON structuré.
 
 ## 4. Prérequis et configuration
 
 ### Option recommandée : Docker
 
-- Docker Desktop (ou Docker Engine) en fonctionnement ; sous Windows, backend Linux/WSL2.
-- Accès réseau au service Azure OpenAI et **identifiants Azure valides** fournis séparément.
-- Port `8000` libre sur la machine.
+- Docker Desktop (ou Docker Engine) installé et démarré
+- Accès réseau au service Azure OpenAI et identifiants Azure valides
+- Port `8000` disponible
 
 L'image utilise **Python 3.12**, et installe Tesseract (anglais et français), LibreOffice et les bibliothèques de `requirements.txt`.
 
@@ -191,7 +191,7 @@ Le schéma est défini dans `app/schema.py` :
 }
 ```
 
-Cet exemple illustre la **forme et les types**, et non un résultat extrait d'un CV réel. Les champs textuels/optionnels absents sont `null`, les listes absentes sont `[]`, et `is_current` est un booléen (`true`/`false`) ou `null`. Les clés non prévues sont refusées (`extra="forbid"`).
+Cet exemple illustre la forme et les types, et non un résultat extrait d'un CV réel. Les champs textuels/optionnels absents sont `null`, les listes absentes sont `[]`, et `is_current` est un booléen (`true`/`false`) ou `null`. Les clés non prévues sont refusées (`extra="forbid"`).
 
 ### Codes de réponse gérés
 
@@ -207,10 +207,10 @@ Cet exemple illustre la **forme et les types**, et non un résultat extrait d'un
 
 Les notebooks du dossier `test/` permettent des vérifications manuelles ciblées :
 
-- `test_api.ipynb` : appels à l'API avec `TestClient`, dont un fichier non pris en charge et un CV absent ;
-- `test_db.ipynb` : enregistrement et récupération de données SQLite ;
-- `test_extraction.ipynb` : extraction native et OCR sur des CV de différents formats ;
-- `test_llm.ipynb` : essais d'extraction structurée avec Azure OpenAI.
+- `test_api.ipynb` : appels à l'API avec `TestClient`, dont un fichier non pris en charge et un CV absent
+- `test_db.ipynb` : enregistrement et récupération de données SQLite
+- `test_extraction.ipynb` : extraction native et OCR sur des CV de différents formats
+- `test_llm.ipynb` : essais d'extraction structurée avec Azure OpenAI
 
 Une analyse exploratoire des formats et de la qualité d'extraction est également disponible dans `data/eda.ipynb`. Les notebooks d'exploration nécessitent les CV de test locaux et peuvent nécessiter des bibliothèques supplémentaires (`pandas`, `matplotlib`, Jupyter) non incluses dans l'image Docker de l'API.
 
