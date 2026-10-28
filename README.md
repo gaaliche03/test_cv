@@ -2,7 +2,7 @@
 
 ## 1. Présentation
 
-Ce projet réalise une API FastAPI de parser de CV pour un cas d'usage RH. Elle reçoit un document, extrait son texte (avec OCR si nécessaire), utilise **GPT-5 via Azure OpenAI** pour structurer les informations selon un schéma défini, valide la réponse avec **Pydantic**, puis l'enregistre dans une base des données avec**SQLite**.
+Ce projet réalise une API FastAPI de parser de CV pour un cas d'usage RH. Elle reçoit un document, extrait son texte (avec OCR si nécessaire), utilise GPT-5 via Azure OpenAI pour structurer les informations selon un schéma défini, valide la réponse avec Pydantic, puis l'enregistre dans une base des données avec SQLite.
 
 L'objectif est de proposer une solution simple, lisible et reproductible, adaptée à des CV de présentations différentes.
 
@@ -89,7 +89,7 @@ L'approche hybride (extraction native + OCR) permet d'utiliser l'OCR uniquement 
 - Accès réseau au service Azure OpenAI et identifiants Azure valides
 - Port `8000` disponible
 
-L'image utilise **Python 3.12**, et installe Tesseract (anglais et français), LibreOffice et les bibliothèques de `requirements.txt`.
+L'image utilise Python 3.12, et installe Tesseract (anglais et français), LibreOffice et les bibliothèques de `requirements.txt`.
 
 Créer un fichier `.env` à la racine du projet :
 
