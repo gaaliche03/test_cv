@@ -214,7 +214,7 @@ Les notebooks du dossier `test/` permettent des vérifications manuelles ciblée
 
 Une analyse exploratoire des formats et de la qualité d'extraction est également disponible dans `data/eda.ipynb`. Les notebooks d'exploration nécessitent les CV de test locaux et peuvent nécessiter des bibliothèques supplémentaires (`pandas`, `matplotlib`, Jupyter) non incluses dans l'image Docker de l'API.
 
-Vérification du code avec Ruff
+### Vérification PEP 8 avec Ruff
 
 Ruff a été utilisé pour vérifier le respect des bonnes pratiques PEP 8.
 
