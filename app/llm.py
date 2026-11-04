@@ -1,3 +1,5 @@
+import json
+import logging
 import os
 
 import openai
@@ -5,6 +7,8 @@ from dotenv import load_dotenv
 from openai import AzureOpenAI
 
 from app.schema import CVData
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 client = AzureOpenAI(
@@ -40,8 +44,12 @@ N'invente jamais d'URL.
 et les langues lorsqu'elles sont mentionnées.
 7. Extrais toutes les expériences professionnelles,
 stages inclus, ainsi que les formations.
-8. Pour les dates, utilise YYYY-MM si le mois est connu,
-YYYY si seule l'année est connue, et present pour un poste en cours.
+8. Pour les dates :
+- Utiliser YYYY-MM si le mois et l'année sont connus.
+- Utiliser YYYY si seule l'année est connue.
+- Utiliser null si la date est absente.
+- Pour une expérience en cours, end_date = null.
+- Ne jamais inventer de dates.
 9. Pour le champ city, retourne uniquement le nom de la ville,
 sans adresse ni code postal.
 10. Dans le champ soft_skills, conserve uniquement les compétences
@@ -63,23 +71,42 @@ utilise une liste vide."""
 
 def extraire_informations(texte):
     if not texte.strip():
+        logger.warning("texte vide envoyé au LLM")
         return None
+    logger.info("début appel GPT-5")
     try:
-        reponse = client.beta.chat.completions.parse(
+        reponse = client.chat.completions.create(
             model=os.getenv("CHAT_DEPLOYMENT"),
             messages=[
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": texte},
             ],
-            response_format=CVData,
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "cv_extraction",
+                    "strict": True,
+                    "schema": CVData,
+                },
+            },
             max_completion_tokens=4000,
             reasoning_effort="minimal",
         )
-        resultat = reponse.choices[0].message
-        if resultat.parsed is None:
-            print("aucune donnée structurée retournée:", resultat.refusal)
+        choix = reponse.choices[0]
+        resultat = choix.message
+
+        if resultat.refusal or choix.finish_reason != "stop":
+            logger.warning(
+                "réponse LLM refusée ou incomplète : %s", choix.finish_reason
+            )
             return None
-        return resultat.parsed
-    except openai.OpenAIError as erreur:
-        print("erreur Azure OpenAI:", erreur)
+
+        if not resultat.content:
+            logger.warning("Réponse LLM vide")
+            return None
+        logger.info("Extraction JSON réussie")
+        return json.loads(resultat.content)
+
+    except (openai.OpenAIError, json.JSONDecodeError):
+        logger.exception("Erreur pendant l'extraction LLM")
         return None

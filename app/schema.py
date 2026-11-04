@@ -1,50 +1,64 @@
-# schema.py: definir la structure json attendue des cv
-# et valider les champs et leurs types avec pydantic
-from pydantic import BaseModel, ConfigDict
+def champ():
+    return {"type": ["string", "null"]}
 
 
-class StrictModel(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid"
-    )  # refuser les champs non prevus dans structure attendue
+def objet(properties):
+    return {
+        "type": "object",
+        "properties": properties,
+        "required": list(properties.keys()),
+        "additionalProperties": False,
+    }
 
 
-class PersonalInformation(StrictModel):
-    first_name: str | None
-    last_name: str | None
-    email: str | None
-    phone: str | None
-    city: str | None
-    linkedin: str | None
-    github: str | None
-
-
-class Skills(StrictModel):
-    technical_skills: list[str]
-    soft_skills: list[str]
-    languages: list[str]
-
-
-class WorkExperience(StrictModel):
-    job_title: str | None
-    company: str | None
-    description: str | None
-    technologies: list[str]
-    location: str | None
-    start_date: str | None
-    end_date: str | None
-
-
-class Education(StrictModel):
-    degree: str | None
-    school_name: str | None
-    start_date: str | None
-    is_current: bool | None
-
-
-class CVData(StrictModel):
-    personal_information: PersonalInformation
-    professional_summary: str | None
-    skills: Skills
-    work_experience: list[WorkExperience]
-    education: list[Education]
+CVData = objet(
+    {
+        "personal_information": objet(
+            {
+                "first_name": champ(),
+                "last_name": champ(),
+                "email": champ(),
+                "phone": champ(),
+                "city": champ(),
+                "linkedin": champ(),
+                "github": champ(),
+            }
+        ),
+        "professional_summary": champ(),
+        "skills": objet(
+            {
+                "technical_skills": {"type": "array", "items": {"type": "string"}},
+                "soft_skills": {"type": "array", "items": {"type": "string"}},
+                "languages": {"type": "array", "items": {"type": "string"}},
+            }
+        ),
+        "work_experience": {
+            "type": "array",
+            "items": objet(
+                {
+                    "job_title": champ(),
+                    "company": champ(),
+                    "description": champ(),
+                    "technologies": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "location": champ(),
+                    "start_date": champ(),
+                    "end_date": champ(),
+                }
+            ),
+        },
+        "education": {
+            "type": "array",
+            "items": objet(
+                {
+                    "degree": champ(),
+                    "school_name": champ(),
+                    "start_date": champ(),
+                    "is_current": {"type": ["boolean", "null"]},
+                }
+            ),
+        },
+    }
+)

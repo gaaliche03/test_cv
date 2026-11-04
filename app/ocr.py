@@ -1,5 +1,6 @@
 # ocr.py: reconnaissance du texte présent dans les images grâce à Tesseract
 import hashlib
+import logging
 import shutil
 import subprocess
 from io import BytesIO
@@ -12,6 +13,8 @@ from docx import Document
 from PIL import Image, ImageOps
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE_TYPE
+
+logger = logging.getLogger(__name__)
 
 
 # préparer une image et extraire son texte avec tesseract
@@ -125,6 +128,7 @@ def ocr_complet(path, extension, langues="eng+fra"):
     # convertir docx et pptx en pdf avec libreoffice
     soffice = shutil.which("soffice") or shutil.which("libreoffice")
     if soffice:
+        logger.info("Conversion du document en PDF pour OCR")
         with TemporaryDirectory() as dossier:
             try:
                 subprocess.run(
@@ -147,7 +151,7 @@ def ocr_complet(path, extension, langues="eng+fra"):
                     if texte:
                         return texte
             except (subprocess.SubprocessError, OSError):
-                pass
+                logger.warning("Conversion LibreOffice échouée, OCR des images")
 
     # si libreoffice echoue, use ocr sur images recuperées
     blobs = images_utiles(path, extension)
